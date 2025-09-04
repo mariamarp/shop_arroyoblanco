@@ -86,23 +86,6 @@ document.getElementById("catalogo").addEventListener("click", (e) => {
 
 document.getElementById("busqueda").addEventListener("input", aplicaBusquedaYOrden);
 document.getElementById("orden").addEventListener("change", aplicaBusquedaYOrden);
-document.getElementById("formProducto").addEventListener("submit", (e) => {
-  e.preventDefault();
-  const nombre = document.getElementById("nombre").value;
-  const precio = parseFloat(document.getElementById("precio").value);
-  const imgUrl = document.getElementById("imgUrl").value || "assets/producto (1).jpg";
-
-  const nuevo = { id: Date.now(), nombre, precio, img: imgUrl };
-  catalogo.push(nuevo);
-  guardarLS("AB_CATALOG", catalogo);
-
-  e.target.reset();
-  aplicaBusquedaYOrden();
-});
-document.getElementById("vaciarCarrito").addEventListener("click", () => {
-  carrito = [];
-  renderCarrito();
-});
 
 document.getElementById("formCheckout").addEventListener("submit", (e) => {
   e.preventDefault();
