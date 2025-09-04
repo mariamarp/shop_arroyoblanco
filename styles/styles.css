@@ -1,13 +1,46 @@
+body {
+  background-color: #f8f9fa;
+  font-family: Arial, sans-serif;
+}
+
 .bg-arroyo {
   background-color: #082d26 !important;
 }
 
+.text-arroyo {
+  color: #082d26;
+}
+
 .btn-arroyo {
-  background-color: #082d26;
-  color: white;
+  background-color: #082d26; 
+  color: #fff;               
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
 }
 
 .btn-arroyo:hover {
-  background-color: #0b4439;
-  color: white;
+  background-color: #0c4538;
+  color: #fff;
+}
+
+#mensajeCompra {
+  font-size: 1rem;
+  padding: 10px;
+  border: 1px solid #082d26;
+  border-radius: 8px;
+  background-color: #e6f2f0;
+}
+
+.btn-agregar {
+  background-color: #082d26; 
+  color: #fff;              
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+.btn-agregar:hover {
+  background-color: #0b4238; 
+  color: #fff;
 }
