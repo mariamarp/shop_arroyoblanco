@@ -13,14 +13,14 @@ body {
 
 .btn-arroyo {
   background-color: #082d26; 
-  color: #fff;               
+  color: #fff;           
   border: none;
   padding: 8px 16px;
   border-radius: 8px;
 }
 
 .btn-arroyo:hover {
-  background-color: #0c4538;
+  background-color: #082d26;
   color: #fff;
 }
 
@@ -33,14 +33,14 @@ body {
 }
 
 .btn-agregar {
-  background-color: #082d26; 
-  color: #fff;              
+  background-color: #082d26;
+  color: #fff;           
   border: none;
   padding: 8px 16px;
   border-radius: 8px;
 }
 
 .btn-agregar:hover {
-  background-color: #0b4238; 
+  background-color: #082d26;
   color: #fff;
 }

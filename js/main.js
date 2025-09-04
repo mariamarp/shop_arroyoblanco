@@ -8,7 +8,6 @@ function leerLS(clave) {
   return JSON.parse(localStorage.getItem(clave)) || [];
 }
 
-
 function renderCatalogo(lista) {
   const contenedor = document.getElementById("catalogo");
   contenedor.innerHTML = "";
@@ -22,7 +21,7 @@ function renderCatalogo(lista) {
         <div class="card-body d-flex flex-column">
           <h5 class="card-title">${prod.nombre}</h5>
           <p class="card-text">$${prod.precio}</p>
-          <button class="btn btn-arroyo mt-auto" data-id="${prod.id}">
+          <button class="btn btn-agregar mt-auto" data-id="${prod.id}">
             Agregar al carrito
           </button>
         </div>
@@ -31,7 +30,6 @@ function renderCatalogo(lista) {
     contenedor.appendChild(card);
   });
 }
-
 
 function renderCarrito() {
   const lista = document.getElementById("listaCarrito");
@@ -66,7 +64,6 @@ function agregarAlCarrito(id) {
   renderCarrito();
 }
 
-
 function aplicaBusquedaYOrden() {
   const texto = document.getElementById("busqueda").value.toLowerCase();
   const orden = document.getElementById("orden").value;
@@ -80,6 +77,12 @@ function aplicaBusquedaYOrden() {
   renderCatalogo(lista);
 }
 
+document.getElementById("catalogo").addEventListener("click", (e) => {
+  if (e.target.classList.contains("btn-agregar")) {
+    const id = parseInt(e.target.dataset.id);
+    agregarAlCarrito(id);
+  }
+});
 
 document.getElementById("busqueda").addEventListener("input", aplicaBusquedaYOrden);
 document.getElementById("orden").addEventListener("change", aplicaBusquedaYOrden);
@@ -114,15 +117,12 @@ document.getElementById("formCheckout").addEventListener("submit", (e) => {
   const email = document.getElementById("emailCliente").value;
   const direccion = document.getElementById("direccionCliente").value;
 
-
   document.getElementById("mensajeCompra").innerText =
-    `✅ Gracias ${nombre}, tu compra ha sido confirmada.\n\n` +
+    `✅ ¡Gracias ${nombre}, tu compra ha sido confirmada!\n\n` +
     `Enviaremos un comprobante a ${email} y tus productos a ${direccion}.`;
-
 
   carrito = [];
   renderCarrito();
-
 
   e.target.reset();
 });
