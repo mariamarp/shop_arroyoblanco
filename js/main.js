@@ -114,9 +114,9 @@ function main() {
   catalogo = leerLS("AB_CATALOG");
   if (catalogo.length === 0) {
     catalogo = [
-      { id: 1, nombre: "Vermut Rojo", precio: 28000, img: "assets/producto (3).jpg" },
-      { id: 2, nombre: "Vermut Blanco", precio: 26000, img: "assets/producto (2).jpg" },
-      { id: 3, nombre: "Vermut Rosso", precio: 25000, img: "assets/producto (1).jpg" }
+      { id: 1, nombre: "Vermut Rojo", precio: 28000, img: "assets/rojo.webp" },
+      { id: 2, nombre: "Vermut Blanco", precio: 26000, img: "assets/blanco" },
+      { id: 3, nombre: "Vermut Rosso", precio: 25000, img: "assets/rosso.webp" }
     ];
   }
 
