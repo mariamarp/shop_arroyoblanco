@@ -2,127 +2,175 @@ let catalogo = [];
 let carrito = [];
 
 function guardarLS(clave, valor) {
-  localStorage.setItem(clave, JSON.stringify(valor));
+    localStorage.setItem(clave, JSON.stringify(valor));
 }
+
 function leerLS(clave) {
-  return JSON.parse(localStorage.getItem(clave)) || [];
+    return JSON.parse(localStorage.getItem(clave)) || [];
+}
+
+async function cargarCatalogo() {
+    try {
+        const response = await fetch('productos.json');
+        if (!response.ok) {
+            throw new Error('Error al cargar los productos');
+        }
+        catalogo = await response.json();
+        guardarLS("AB_CATALOG", catalogo);
+        aplicaBusquedaYOrden();
+    } catch (error) {
+        console.error("Error:", error);
+        document.getElementById("catalogo").innerHTML = `<p class="text-danger">Error al cargar el catálogo de productos.</p>`;
+    }
 }
 
 function renderCatalogo(lista) {
-  const contenedor = document.getElementById("catalogo");
-  contenedor.innerHTML = "";
+    const contenedor = document.getElementById("catalogo");
+    contenedor.innerHTML = "";
 
-  lista.forEach((prod) => {
-    const card = document.createElement("div");
-    card.className = "col-md-4";
-    card.innerHTML = `
-      <div class="card h-100">
-        <img src="${prod.img}" class="card-img-top" alt="${prod.nombre}">
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title">${prod.nombre}</h5>
-          <p class="card-text">$${prod.precio}</p>
-          <button class="btn btn-agregar mt-auto" data-id="${prod.id}">
-            Agregar al carrito
-          </button>
-        </div>
-      </div>
-    `;
-    contenedor.appendChild(card);
-  });
+    lista.forEach((prod) => {
+        const card = document.createElement("div");
+        card.className = "col-md-4";
+        card.innerHTML = `
+            <div class="card h-100">
+                <img src="${prod.img}" class="card-img-top" alt="${prod.nombre}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">${prod.nombre}</h5>
+                    <p class="card-text">$${prod.precio.toLocaleString('es-AR')}</p>
+                    <button class="btn btn-agregar mt-auto" data-id="${prod.id}">
+                        Agregar al carrito
+                    </button>
+                </div>
+            </div>
+        `;
+        contenedor.appendChild(card);
+    });
 }
 
 function renderCarrito() {
-  const lista = document.getElementById("listaCarrito");
-  lista.innerHTML = "";
+    const lista = document.getElementById("listaCarrito");
+    lista.innerHTML = "";
 
-  carrito.forEach((item) => {
-    const li = document.createElement("li");
-    li.className = "list-group-item d-flex justify-content-between align-items-center";
-    li.innerHTML = `
-      ${item.nombre} x${item.cantidad} 
-      <span>$${item.precio * item.cantidad}</span>
-    `;
-    lista.appendChild(li);
-  });
+    carrito.forEach((item) => {
+        const li = document.createElement("li");
+        li.className = "list-group-item d-flex justify-content-between align-items-center";
+        li.innerHTML = `
+            ${item.nombre} x${item.cantidad} 
+            <span>$${(item.precio * item.cantidad).toLocaleString('es-AR')}</span>
+        `;
+        lista.appendChild(li);
+    });
 
-  document.getElementById("totalCarrito").innerText =
-    "Total: $" + carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
+    const total = carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
+    document.getElementById("totalCarrito").innerText = `Total: $${total.toLocaleString('es-AR')}`;
 
-  guardarLS("AB_CART", carrito);
+    guardarLS("AB_CART", carrito);
 }
 
 function agregarAlCarrito(id) {
-  const producto = catalogo.find((p) => p.id === id);
-  const existente = carrito.find((item) => item.id === id);
+    const producto = catalogo.find((p) => p.id === id);
+    const existente = carrito.find((item) => item.id === id);
 
-  if (existente) {
-    existente.cantidad++;
-  } else {
-    carrito.push({ ...producto, cantidad: 1 });
-  }
+    if (existente) {
+        existente.cantidad++;
+    } else {
+        carrito.push({ ...producto, cantidad: 1 });
+    }
 
-  renderCarrito();
+    Toastify({
+        text: `✅ ${producto.nombre} añadido al carrito`,
+        duration: 2000,
+        gravity: "top",
+        position: "right",
+        style: {
+            background: "#082d26",
+        }
+    }).showToast();
+
+    renderCarrito();
 }
 
 function aplicaBusquedaYOrden() {
-  const texto = document.getElementById("busqueda").value.toLowerCase();
-  const orden = document.getElementById("orden").value;
+    const texto = document.getElementById("busqueda").value.toLowerCase();
+    const orden = document.getElementById("orden").value;
 
-  let lista = catalogo.filter((p) => p.nombre.toLowerCase().includes(texto));
+    let lista = catalogo.filter((p) => p.nombre.toLowerCase().includes(texto));
 
-  if (orden === "precio-asc") lista.sort((a, b) => a.precio - b.precio);
-  if (orden === "precio-desc") lista.sort((a, b) => b.precio - a.precio);
-  if (orden === "nombre") lista.sort((a, b) => a.nombre.localeCompare(b.nombre));
+    if (orden === "precio-asc") lista.sort((a, b) => a.precio - b.precio);
+    if (orden === "precio-desc") lista.sort((a, b) => b.precio - a.precio);
+    if (orden === "nombre") lista.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
-  renderCatalogo(lista);
+    renderCatalogo(lista);
 }
 
 document.getElementById("catalogo").addEventListener("click", (e) => {
-  if (e.target.classList.contains("btn-agregar")) {
-    const id = parseInt(e.target.dataset.id);
-    agregarAlCarrito(id);
-  }
+    if (e.target.classList.contains("btn-agregar")) {
+        const id = parseInt(e.target.dataset.id);
+        agregarAlCarrito(id);
+    }
 });
 
 document.getElementById("busqueda").addEventListener("input", aplicaBusquedaYOrden);
 document.getElementById("orden").addEventListener("change", aplicaBusquedaYOrden);
 
+document.getElementById("vaciarCarrito").addEventListener("click", () => {
+    carrito = [];
+    renderCarrito();
+    Toastify({
+        text: "El carrito ha sido vaciado.",
+        duration: 2000,
+        gravity: "top",
+        position: "center",
+        style: {
+            background: "#082d26",
+        }
+    }).showToast();
+});
+
 document.getElementById("formCheckout").addEventListener("submit", (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (carrito.length === 0) {
-    document.getElementById("mensajeCompra").innerText =
-      "⚠️ No puedes finalizar la compra con el carrito vacío.";
-    return;
-  }
+    if (carrito.length === 0) {
+        Toastify({
+            text: "⚠️ No puedes finalizar la compra con el carrito vacío.",
+            duration: 3000,
+            gravity: "top",
+            position: "center",
+            style: {
+                background: "#dc3545",
+            }
+        }).showToast();
+        return;
+    }
 
-  const nombre = document.getElementById("nombreCliente").value;
-  const email = document.getElementById("emailCliente").value;
-  const direccion = document.getElementById("direccionCliente").value;
+    const nombre = document.getElementById("nombreCliente").value;
+    const email = document.getElementById("emailCliente").value;
+    const direccion = document.getElementById("direccionCliente").value;
 
-  document.getElementById("mensajeCompra").innerText =
-    `✅ ¡Gracias ${nombre}, tu compra ha sido confirmada!\n\n` +
-    `Enviaremos un comprobante a ${email} y tus productos a ${direccion}.`;
+    document.getElementById("mensajeCompra").innerHTML = `
+        <p class="mb-1">✅ ¡Gracias <strong>${nombre}</strong>, tu compra ha sido confirmada!</p>
+        <p>Enviaremos un comprobante a <strong>${email}</strong> y tus productos a <strong>${direccion}</strong>.</p>
+    `;
 
-  carrito = [];
-  renderCarrito();
+    Toastify({
+        text: "¡Compra finalizada con éxito!",
+        duration: 3000,
+        gravity: "top",
+        position: "center",
+        style: {
+            background: "#28a745",
+        }
+    }).showToast();
 
-  e.target.reset();
+    carrito = [];
+    renderCarrito();
+    e.target.reset();
 });
 
 function main() {
-  catalogo = leerLS("AB_CATALOG");
-  if (catalogo.length === 0) {
-    catalogo = [
-      { id: 1, nombre: "Vermut Rojo", precio: 28000, img: "assets/rojo.webp" },
-      { id: 2, nombre: "Vermut Blanco", precio: 26000, img: "assets/blanco.webp" },
-      { id: 3, nombre: "Vermut Rosso", precio: 25000, img: "assets/rosso.webp" }
-    ];
-  }
-
-  carrito = leerLS("AB_CART");
-
-  aplicaBusquedaYOrden();
-  renderCarrito();
+    cargarCatalogo();
+    carrito = leerLS("AB_CART");
+    renderCarrito();
 }
+
 main();

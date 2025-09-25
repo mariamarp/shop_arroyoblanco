@@ -1,0 +1,20 @@
+[
+    {
+      "id": 1,
+      "nombre": "Vermut Rojo",
+      "precio": 28000,
+      "img": "assets/rojo.webp"
+    },
+    {
+      "id": 2,
+      "nombre": "Vermut Blanco",
+      "precio": 26000,
+      "img": "assets/blanco.webp"
+    },
+    {
+      "id": 3,
+      "nombre": "Vermut Rosso",
+      "precio": 25000,
+      "img": "assets/rosso.webp"
+    }
+]
