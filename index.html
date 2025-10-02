@@ -52,23 +52,62 @@
             <button class="btn btn-danger mb-3" id="vaciarCarrito">Vaciar Carrito</button>
 
             <h5>Finalizar compra</h5>
-            <form id="formCheckout" class="row g-2">
-                <div class="col-12">
-                    <input type="text" id="nombreCliente" class="form-control" placeholder="Nombre completo" required>
+            <div id="checkoutContent">
+                
+                <div id="loginSimulado">
+                    <p class="text-muted">Necesitas iniciar sesión para continuar.</p>
+                    <div class="row g-2 mb-3">
+                        <div class="col-12">
+                            <input type="text" id="userSimulado" class="form-control" placeholder="Usuario (Ej: cliente)" value="cliente">
+                        </div>
+                        <div class="col-12">
+                            <input type="password" id="passSimulado" class="form-control" placeholder="Contraseña (Ej: 1234)">
+                        </div>
+                        <div class="col-12">
+                            <button type="button" class="btn btn-arroyo w-100" id="btnSimularLogin">
+                                Iniciar Sesión
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-12">
-                    <input type="email" id="emailCliente" class="form-control" placeholder="Correo electrónico" required>
-                </div>
-                <div class="col-12">
-                    <input type="text" id="direccionCliente" class="form-control" placeholder="Dirección" required>
-                </div>
-                <div class="col-12">
-                    <button type="submit" class="btn btn-arroyo w-100">
-                        Confirmar compra
-                    </button>
-                </div>
-            </form>
+                
+                <form id="formCheckout" class="row g-2" style="display: none;">
+                    
+                    <div class="col-12 mt-2">
+                        <label for="nombreCliente" class="form-label fw-bold">1. Datos de Envío:</label>
+                        <input type="text" id="nombreCliente" class="form-control" placeholder="Nombre completo" required>
+                    </div>
+                    <div class="col-12">
+                        <input type="email" id="emailCliente" class="form-control" placeholder="Correo electrónico" required>
+                    </div>
+                    <div class="col-12">
+                        <input type="text" id="direccionCliente" class="form-control" placeholder="Dirección" required>
+                    </div>
+                    
+                    <div class="col-12 mt-3">
+                        <label for="medioPago" class="form-label fw-bold">2. Medio de Pago:</label>
+                        <select id="medioPago" class="form-select" required>
+                            <option value="" disabled selected>Selecciona un método...</option>
+                            <option value="credito">Tarjeta de Crédito / Débito (Simulado)</option>
+                            <option value="transferencia">Transferencia Bancaria (Simulado)</option>
+                            <option value="efectivo">Efectivo (Simulado)</option>
+                        </select>
+                    </div>
 
+                    <div class="col-12 mt-4">
+                        <label class="form-label fw-bold">3. Resumen de Compra:</label>
+                        <div id="resumenCompra" class="p-3 border rounded bg-light">
+                            </div>
+                    </div>
+
+                    <div class="col-12 mt-3">
+                        <button type="submit" class="btn btn-arroyo w-100">
+                            Finalizar y Pagar
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
             <div id="mensajeCompra" class="mt-3"></div>
         </div>
     </div>
